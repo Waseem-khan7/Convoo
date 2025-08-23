@@ -6,13 +6,13 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
   const navigate = useNavigate();
   return (
     <div
-      className={` bg-[#8185B2]/10 h-full p-5 rounded-r-xl overflow-y-scroll text-orange-100 ${
+      className={` bg-[#cd3116]/10 h-full p-5 rounded-r-xl overflow-y-scroll text-orange-100 ${
         selectedUser ? "max-md:hidden" : ""
       }`}
     >
       <div className="pb-5">
         <div className="flex justify-between items-center">
-          <img src={assets.logo2} alt="Logo" className="max-w-40" />
+          <img src={assets.logo} alt="Logo" className="max-w-40" />
           <div className="relative py-2 group">
             <img
               src={assets.menu_icon}
@@ -46,24 +46,24 @@ const Sidebar = ({ selectedUser, setSelectedUser }) => {
             key={index}
             onClick={() => setSelectedUser(user)}
             className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm ${
-              selectedUser?._id === user._id && "bg-[#cd3116]/50"
+              selectedUser?._id === user._id && "bg-[#cd3116]/60"
             }`}
           >
             <img
               src={user.profilePic || assets.avatar_icon}
               alt="Profile Pic"
-              className="w-[35] aspect-[1/1] rounded-full"
+              className="w-[35px] aspect-[1/1] rounded-full"
             />
             <div className="flex flex-col leading-5">
-              <p>{user.fullName}</p>
+              <p className="text-xs">{user.fullName}</p>
               {index < 3 ? (
-                <span className="bg-green-400 text-xs">Online</span>
+                <span className="text-green-400 text-xs">Online</span>
               ) : (
-                <span className="bg-neutral-400 text-xs">Offline</span>
+                <span className="text-neutral-400 text-xs">Offline</span>
               )}
             </div>
             {index > 2 && (
-              <p className="absolute top-4 right-4 text-xs h-5 w-5 flex justify-center items-center rounded-full bg-violet-500/50">
+              <p className="absolute top-4 right-4 text-xs h-5 w-5 flex justify-center items-center rounded-full bg-orange-800">
                 {index}
               </p>
             )}

@@ -6,6 +6,7 @@ import logo_big from "./logo_big.svg";
 import logo from "./logo.png";
 import logo1 from "./logo1.png";
 import logo2 from "./logo2.png";
+import logo3 from "./logo3.png";
 import profile_richard from "./profile_richard.png";
 import profile_alison from "./profile_alison.png";
 import profile_enrique from "./profile_enrique.png";
@@ -33,6 +34,7 @@ const assets = {
   logo,
   logo1,
   logo2,
+  logo3,
   search_icon,
   send_button,
   menu_icon,
