@@ -1,4 +1,32 @@
-
+# dependencies
 node_modules
-.env
+.pnp
+.pnp.js
 
+# build output
+dist
+build
+
+# misc
+.DS_Store
+
+# env files (never commit secrets!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+server/.env
+
+# vscode (keep only shared settings/extensions)
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# backend build
+server/dist
+server/build
+
+# logs
+*.log
+server/logs
