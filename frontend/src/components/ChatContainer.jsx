@@ -5,16 +5,18 @@ import { formatMessageTime } from '../lib/utils';
 const ChatContainer = ({ selectedUser, setSelectedUser }) => {
   const scrollEnd = useRef();
 
+  // Use useLayoutEffect instead of useEffect. useLayoutEffect runs after DOM painting, so the scroll will work immediately:
+
   useEffect(() => {
     if (scrollEnd.current) {
       scrollEnd.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, []);
+  }, [selectedUser, messagesDummyData]);
 
   return selectedUser ? (
     <div className="relative h-full overflow-scroll bg-slate-900/70 backdrop-blur-lg">
       {/* --------Header-------- */}
-      <div className="my-4 flex items-center gap-3 border-b border-slate-700 py-3">
+      <div className="mx-2 my-4 flex items-center gap-3 border-b border-slate-700 py-3">
         <img
           src={assets.profile_martin}
           alt="Profile"
@@ -27,12 +29,12 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
         <img
           onClick={() => setSelectedUser(null)}
           src={assets.arrow_icon}
-          alt=""
+          alt="arrow icon"
           className="max-w-7 cursor-pointer md:hidden"
         />
         <img
           src={assets.help_icon}
-          alt="Help"
+          alt="Help icon"
           className="max-w-4 cursor-pointer max-md:hidden"
         />
       </div>
@@ -54,16 +56,16 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
               />
             ) : (
               <p
-                className={`mb-8 max-w-[200px] rounded-lg p-2 font-light break-all text-white md:text-sm ${
+                className={`mb-8 max-w-[200px] rounded-lg bg-indigo-600/70 p-2 font-light break-all text-white md:text-sm ${
                   msg.senderId === '680f50e4f10f3cd28382ecf9'
-                    ? 'rounded-br-none bg-indigo-600/70'
-                    : 'rounded-bl-none bg-violet-600/70'
+                    ? 'rounded-br-none'
+                    : 'rounded-bl-none'
                 }`}
               >
                 {msg.text}
               </p>
             )}
-            <div className="text-center text-xs">
+            <div className="mb-1 text-center text-xs">
               <img
                 src={
                   msg.senderId === '680f50e4f10f3cd28382ecf9'
@@ -82,8 +84,8 @@ const ChatContainer = ({ selectedUser, setSelectedUser }) => {
         <div ref={scrollEnd}></div>
       </div>
 
-      {/* --------Bottom Input-------- */}
-      <div className="absolute right-0 bottom-0 left-0 flex items-center gap-3 bg-slate-900/80 p-3">
+      {/* --------Bottom Input Area-------- */}
+      <div className="absolute right-0 bottom-0 left-0 flex items-center gap-3 p-3">
         <div className="flex flex-1 items-center rounded-full border border-slate-600 bg-slate-800 px-3">
           <input
             type="text"
