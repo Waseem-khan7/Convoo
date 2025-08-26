@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import "dotenv/config";
+import { connectDB } from "./lib/dbConnection.js";
 
 // Create Express App and HTTP Server
 const app = express();
@@ -13,6 +14,9 @@ app.use(cors());
 
 // Routes
 app.use("/api/status", (req, res) => res.send("Server is Live"));
+
+// Connect to database
+await connectDB();
 
 // PORT
 const PORT = process.env.PORT || 5000;
