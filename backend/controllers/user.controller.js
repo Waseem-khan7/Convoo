@@ -1,7 +1,8 @@
+import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 
-// Signup a new User
+// Signup a New User
 const signup = async (req, res) => {
   const { fullName, email, password, bio } = req.body;
   try {
@@ -23,5 +24,43 @@ const signup = async (req, res) => {
       password: hashedPassword,
       bio,
     });
-  } catch (error) {}
+
+    const token = generateToken(newUser._id);
+    res.json({
+      success: true,
+      userData: newUser,
+      token,
+      message: "Account created successfully",
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
 };
+
+// Login a User
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const userData = await User.findOne(email);
+
+    const isPasswordCorrect = await bcrypt.compare(password, userData.password);
+    if (!isPasswordCorrect) {
+      return res.json({ success: false, message: "Invalid Credentials" });
+    }
+
+    const token = generateToken(userData._id);
+    res.json({ success: true, userData, token, message: "Login Successfully" });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// Controller to check if user is Authenticated
+
+const checkAuth = (req, res) => {
+  res.json({ success: true, user: req.user });
+};
+
+export default { signup, login, checkAuth };
