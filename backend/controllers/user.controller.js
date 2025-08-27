@@ -8,12 +8,16 @@ const signup = async (req, res) => {
   const { fullName, email, password, bio } = req.body;
   try {
     if (!fullName || !email || !password || !bio) {
-      return res.json({ success: false, message: "Missing Details" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing details" });
     }
 
-    const user = await User.findOne(email);
+    const user = await User.findOne({ email });
     if (user) {
-      return res.json({ success: false, message: "Account already exits" });
+      return res
+        .status(409)
+        .json({ success: false, message: "Account already exists" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -27,15 +31,15 @@ const signup = async (req, res) => {
     });
 
     const token = generateToken(newUser._id);
-    res.json({
+    res.status(201).json({
       success: true,
       userData: newUser,
       token,
       message: "Account created successfully",
     });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error(error.message);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
@@ -43,33 +47,39 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const userData = await User.findOne(email);
+    const userData = await User.findOne({ email });
+    if (!userData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
 
     const isPasswordCorrect = await bcrypt.compare(password, userData.password);
     if (!isPasswordCorrect) {
-      return res.json({ success: false, message: "Invalid Credentials" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     const token = generateToken(userData._id);
-    res.json({ success: true, userData, token, message: "Login Successfully" });
+    res
+      .status(200)
+      .json({ success: true, userData, token, message: "Login successful" });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error(error.message);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
 // Controller to check if user is Authenticated
-
 const checkAuth = (req, res) => {
-  res.json({ success: true, user: req.user });
+  res.status(200).json({ success: true, user: req.user });
 };
 
 // Controller to update User Profile
-
 const updateProfile = async (req, res) => {
   try {
     const { profilePic, bio, fullName } = req.body;
-
     const userId = req.user._id;
     let updatedUser;
 
@@ -81,11 +91,27 @@ const updateProfile = async (req, res) => {
       );
     } else {
       const upload = await cloudinary.uploader.upload(profilePic);
-      
+      updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          profilePic: upload.secure_url,
+          bio,
+          fullName,
+        },
+        { new: true }
+      );
     }
+
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
-    console.log(error.message);
-    res.json({ success: false, message: error.message });
+    console.error(error.message);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
