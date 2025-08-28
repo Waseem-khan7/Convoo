@@ -5,6 +5,11 @@ import jwt from "jsonwebtoken";
 export const protectRoute = async (req, res, next) => {
   try {
     const token = req.headers.token;
+    if (!token) {
+      return res
+        .status(401)
+        .json({ success: false, message: "No token provided" });
+    }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -14,7 +19,7 @@ export const protectRoute = async (req, res, next) => {
     }
     req.user = user;
     next();
-  } catch (error) { 
+  } catch (error) {
     console.log(error.message);
     return res.json({ success: false, message: error.message });
   }

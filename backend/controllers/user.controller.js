@@ -7,12 +7,14 @@ import bcrypt from "bcryptjs";
 const signup = async (req, res) => {
   const { fullName, email, password, bio } = req.body;
   try {
+    // Validate input
     if (!fullName || !email || !password || !bio) {
       return res
         .status(400)
         .json({ success: false, message: "Missing details" });
     }
 
+    // Check if user already exists
     const user = await User.findOne({ email });
     if (user) {
       return res
@@ -20,9 +22,11 @@ const signup = async (req, res) => {
         .json({ success: false, message: "Account already exists" });
     }
 
+    //Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Create user in DB
     const newUser = await User.create({
       fullName,
       email,
@@ -30,6 +34,7 @@ const signup = async (req, res) => {
       bio,
     });
 
+    // Generate JWT (Token)
     const token = generateToken(newUser._id);
     res.status(201).json({
       success: true,
@@ -46,7 +51,15 @@ const signup = async (req, res) => {
 // Login a User
 const login = async (req, res) => {
   const { email, password } = req.body;
-  try {
+  try { 
+    // validate input
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Please enter all details" });
+    }
+
+    // check if user exists
     const userData = await User.findOne({ email });
     if (!userData) {
       return res
@@ -54,6 +67,7 @@ const login = async (req, res) => {
         .json({ success: false, message: "User not found" });
     }
 
+    // compare password
     const isPasswordCorrect = await bcrypt.compare(password, userData.password);
     if (!isPasswordCorrect) {
       return res
