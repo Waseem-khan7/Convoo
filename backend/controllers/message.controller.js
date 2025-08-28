@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 
@@ -43,7 +44,7 @@ export const getMessages = async (req, res) => {
     // Extracting ID of user to chatting
     const { id: selectedUserId } = req.params;
 
-    // Extract my (logged-in) user ID from the auth middleware
+    // Extract my (logged-in) ID from the auth middleware
     const myId = req.user._id;
 
     // Get all messages between me and the selected user
@@ -61,6 +62,48 @@ export const getMessages = async (req, res) => {
     );
 
     res.status(200).json({ success: true, messages });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// API to mark message as seen using message ID
+export const markMessageAsSeen = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await Message.findByIdAndUpdate(id, { seen: true });
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Send message to selected User
+export const sendMessage = async (req, res) => {
+  try {
+    const { text, image } = req.body;
+    const receiverId = req.params.id;
+    const senderId = req.user._id;
+
+    let imageUrl;
+    if (image) {
+      const uploadResponse = await cloudinary.uploader.upload(image);
+      imageUrl = uploadResponse.secure_url;
+    }
+
+    const newMessage = await Message.create({
+      senderId,
+      receiverId,
+      text,
+      image: imageUrl,
+    });
+
+    res
+      .status(201)
+      .json({ success: true, message: "Message sent", newMessage });
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ success: false, message: error.message });
