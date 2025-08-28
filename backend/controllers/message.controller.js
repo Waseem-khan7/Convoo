@@ -1,6 +1,7 @@
 import cloudinary from "../lib/cloudinary.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
+import { io, userScoketMap } from "../server.js";
 
 // Get all users except Logged in User
 export const getUsersForSidebar = async (req, res) => {
@@ -88,6 +89,12 @@ export const sendMessage = async (req, res) => {
     const receiverId = req.params.id;
     const senderId = req.user._id;
 
+    if (!text && !image) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Text or Image required" });
+    }
+
     let imageUrl;
     if (image) {
       const uploadResponse = await cloudinary.uploader.upload(image);
@@ -100,6 +107,12 @@ export const sendMessage = async (req, res) => {
       text,
       image: imageUrl,
     });
+
+    // Emit the new message to receiver's socket
+    const receiverSocketId = userScoketMap[receiverId];
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
 
     res
       .status(201)
