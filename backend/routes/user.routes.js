@@ -5,13 +5,13 @@ import {
   signup,
   updateProfile,
 } from "../controllers/user.controller.js";
-import { auth } from "../middlewares/auth.middleware.js";
+import { protectRoute } from "../middlewares/auth.middleware.js";
 
 const userRouter = express.Router();
 
 userRouter.post("/signup", signup);
 userRouter.post("/login", login);
-userRouter.put("/update-profile", auth, updateProfile);
-userRouter.get("/check", auth, checkAuth);
+userRouter.put("/update-profile", protectRoute, updateProfile);
+userRouter.get("/check", protectRoute, checkAuth);
 
 export default userRouter;
