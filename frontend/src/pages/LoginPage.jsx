@@ -93,7 +93,11 @@ const LoginPage = () => {
         )}
 
         <div className="flex items-center gap-2 text-sm text-slate-400">
-          <input type="checkbox" className="cursor-pointer accent-indigo-500" />
+          <input
+            type="checkbox"
+            className="cursor-pointer accent-indigo-500"
+            required
+          />
           <p>Agree to the terms of use & privacy policy.</p>
         </div>
 
