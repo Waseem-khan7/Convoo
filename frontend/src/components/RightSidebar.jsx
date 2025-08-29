@@ -14,7 +14,7 @@ const RightSidebar = ({ selectedUser }) => {
             alt="Profile picture"
             className="aspect-[1/1] w-20 rounded-full border-2 border-violet-400 shadow-lg"
           />
-          <h1 className="mx-auto flex items-center gap-2 px-10 text-xl font-semibold text-violet-300">
+          <h1 className="mx-auto flex items-center gap-2 px-10 text-xl font-semibold text-slate-100">
             <span className="h-2 w-2 rounded-full bg-green-500"></span>
             {selectedUser.fullName}
           </h1>
@@ -24,7 +24,7 @@ const RightSidebar = ({ selectedUser }) => {
 
         {/* --------Media Section-------- */}
         <div className="flex-1 overflow-y-auto px-5 text-xs">
-          <p className="text-violet-400">Media</p>
+          <p className="text-slate-100">Media</p>
           <div className="mt-2 grid max-h-[200px] grid-cols-2 gap-4 overflow-y-scroll opacity-80">
             {imagesDummyData.map((url, index) => (
               <div
