@@ -1,18 +1,12 @@
-import React, { useContext, useState } from 'react';
-import assets, { userDummyData } from '../assets/assets';
+import React, { useContext, useEffect, useState } from 'react';
+import assets from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
 import { ChatContext } from '../context/ChatContext';
 
 const Sidebar = () => {
-  const {
-    users,
-    selectedUser,
-    setSelectedUser,
-    unSeenMessages,
-    setUnseenMessages,
-    getUsers,
-  } = useContext(ChatContext);
+  const { users, selectedUser, setSelectedUser, unSeenMessages, getUsers } =
+    useContext(ChatContext);
 
   const { logout, onlineUsers } = useContext(AuthContext);
 
@@ -25,6 +19,10 @@ const Sidebar = () => {
         user.fullName.toLowerCase().includes(input.toLowerCase())
       )
     : users;
+
+  useEffect(() => {
+    getUsers();
+  }, [onlineUsers]);
 
   return (
     <div
@@ -64,6 +62,7 @@ const Sidebar = () => {
         <div className="mt-5 flex items-center gap-2 rounded-full bg-slate-800 px-4 py-3">
           <img src={assets.search_icon} alt="Search" className="w-3" />
           <input
+            value={input}
             onChange={(e) => setInput(e.target.value)}
             type="text"
             placeholder="Search User..."
@@ -89,17 +88,20 @@ const Sidebar = () => {
               alt="Profile Pic"
               className="aspect-[1/1] w-[35px] rounded-full"
             />
+
             <div className="flex flex-col leading-5">
               <p className="text-xs">{user.fullName}</p>
-              {index < 3 ? (
+
+              {onlineUsers.includes(user._id) ? (
                 <span className="text-xs text-green-400">Online</span>
               ) : (
                 <span className="text-xs text-slate-500">Offline</span>
               )}
             </div>
-            {index > 2 && (
+
+            {(unSeenMessages?.[user._id] ?? 0) > 0 && (
               <p className="absolute top-4 right-4 flex h-5 w-5 items-center justify-center rounded-full bg-purple-500 text-xs text-white">
-                {index}
+                {unSeenMessages[user._id]}
               </p>
             )}
           </div>

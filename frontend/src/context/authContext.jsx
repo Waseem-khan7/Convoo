@@ -6,6 +6,8 @@ import { io } from 'socket.io-client';
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.baseURL = backendUrl;
 
+console.log(import.meta.env.VITE_BACKEND_URL);
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -17,6 +19,9 @@ export const AuthProvider = ({ children }) => {
   // Check if user is authenticated and if so, set the user data and connect the Socket
   const checkAuth = async () => {
     try {
+      if (token) {
+        axios.defaults.headers.common['token'] = token;
+      }
       const { data } = await axios.get('/api/auth/check');
       if (data.success) {
         setAuthUser(data.user);
@@ -87,11 +92,11 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     if (token) {
       axios.defaults.headers.common['token'] = token;
     }
-    await checkAuth();
+    checkAuth();
   }, []);
 
   const value = {

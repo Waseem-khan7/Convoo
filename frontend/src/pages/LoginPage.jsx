@@ -14,17 +14,19 @@ const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (currState === 'Sign up' && !isDataSubmitted) {
       setIsDataSubmitted(true);
       return;
     }
 
-    login(currState === 'Sign up' ? 'signup' : 'login', {
-      fullName,
-      email,
-      password,
-      bio,
-    });
+    if (currState === 'Sign up') {
+      // signup requires full details
+      login('signup', { fullName, email, password, bio });
+    } else {
+      // login only needs email + password
+      login('login', { email, password });
+    }
   };
 
   return (
