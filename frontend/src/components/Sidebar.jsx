@@ -19,6 +19,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
 
   const [input, setInput] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const filteredUsers = input
     ? users.filter((user) =>
@@ -40,27 +41,36 @@ const Sidebar = () => {
         {/* Logo + Menu */}
         <div className="flex items-center justify-between">
           <img src={assets.logo} alt="Logo" className="max-w-40" />
-          <div className="group relative py-2">
+          <div className="relative py-2">
             <img
+              onClick={() => setMenuOpen((prev) => !prev)}
               src={assets.menu_icon}
               alt="Menu"
               className="max-h-5 cursor-pointer"
             />
-            <div className="absolute top-full right-0 z-20 hidden w-32 rounded-md border border-slate-700 bg-slate-800 p-5 text-slate-100 group-hover:block">
-              <p
-                onClick={() => navigate('/profile')}
-                className="cursor-pointer text-sm hover:text-rose-500"
-              >
-                Edit Profile
-              </p>
-              <hr className="my-2 border-t border-slate-600" />
-              <p
-                onClick={() => logout()}
-                className="cursor-pointer text-sm hover:text-rose-500"
-              >
-                Logout
-              </p>
-            </div>
+            {menuOpen && (
+              <div className="absolute top-full right-0 z-20 w-32 rounded-md border border-slate-700 bg-slate-800 p-5 text-slate-100 shadow-lg">
+                <p
+                  onClick={() => {
+                    navigate('/profile');
+                    setMenuOpen(false);
+                  }}
+                  className="cursor-pointer text-sm hover:text-rose-500"
+                >
+                  Edit Profile
+                </p>
+                <hr className="my-2 border-t border-slate-600" />
+                <p
+                  onClick={() => {
+                    logout();
+                    setMenuOpen(false);
+                  }}
+                  className="cursor-pointer text-sm hover:text-rose-500"
+                >
+                  Logout
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
