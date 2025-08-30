@@ -7,9 +7,6 @@ Convoo is a real-time chat application built with the MERN stack. Users can sign
 ---
 
 ⚙️ **Steps to Setup Backend Locally**  
-**Description:** This is the Backend Server APIs of Convoo.
-
-**Steps to Setup locally:**
 
 Step 1 : Clone the repo  
 Step 2 : Run this command `cd server`  
@@ -22,9 +19,6 @@ Step 7 : Run this command to start the server `npm start`
 ---
 
 ⚙️ **Steps to Setup Frontend Locally**  
-**Description:** This is the Frontend UI of Convoo.
-
-**Steps to Setup locally:**
 
 Step 1 : Clone the repo  
 Step 2 : Run this command `cd client`  
