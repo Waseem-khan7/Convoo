@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import assets, { imagesDummyData } from '../assets/assets';
+import { ChatContext } from '../context/ChatContext';
+import { AuthContext } from '../context/authContext';
 
-const RightSidebar = ({ selectedUser }) => {
+const RightSidebar = () => {
+  const { selectedUser, messages } = useContext(ChatContext);
+  const { logout, onlineUsers } = useContext(AuthContext);
+
+  const [msgImages, setMsgImages] = useState([]);
+
+  // Get all the images from the messages and set them to state
+  useEffect(() => {
+    setMsgImages(messages.filter((msg) => msg.image).map((msg) => msg.image));
+  }, [messages]);
+
   return (
     selectedUser && (
       <div
@@ -15,7 +27,11 @@ const RightSidebar = ({ selectedUser }) => {
             className="aspect-[1/1] w-20 rounded-full border-2 border-violet-400 shadow-lg"
           />
           <h1 className="mx-auto flex items-center gap-2 px-10 text-xl font-semibold text-slate-100">
-            <span className="h-2 w-2 rounded-full bg-green-500"></span>
+            {onlineUsers.includes(selectedUser._id) ? (
+              <span className="h-2 w-2 rounded-full bg-green-500"></span>
+            ) : (
+              <span className="h-2 w-2 rounded-full bg-red-500"></span>
+            )}
             {selectedUser.fullName}
           </h1>
           <p className="mx-auto px-10 text-gray-400">{selectedUser?.bio}</p>
@@ -26,7 +42,7 @@ const RightSidebar = ({ selectedUser }) => {
         <div className="flex-1 overflow-y-auto px-5 text-xs">
           <p className="text-slate-100">Media</p>
           <div className="mt-2 grid max-h-[200px] grid-cols-2 gap-4 overflow-y-scroll opacity-80">
-            {imagesDummyData.map((url, index) => (
+            {msgImages.map((url, index) => (
               <div
                 key={index}
                 onClick={() => window.open(url)}
@@ -43,7 +59,10 @@ const RightSidebar = ({ selectedUser }) => {
         </div>
 
         {/* --------Logout Button-------- */}
-        <button className="mx-auto my-4 cursor-pointer rounded-full border-none bg-gradient-to-r from-violet-500 to-purple-600 px-20 py-2 text-sm font-medium text-white shadow-lg transition hover:scale-105 hover:opacity-90">
+        <button
+          onClick={() => logout()}
+          className="mx-auto my-4 cursor-pointer rounded-full border-none bg-gradient-to-r from-violet-500 to-purple-600 px-20 py-2 text-sm font-medium text-white shadow-lg transition hover:scale-105 hover:opacity-90"
+        >
           Logout
         </button>
       </div>
