@@ -31,7 +31,7 @@ export const ChatProvider = ({ children }) => {
     try {
       const { data } = await axios.get(`/api/messages/${userId}`);
       if (data.success) {
-        setMessages(data.message);
+        setMessages(data.messages);
       }
     } catch (error) {
       toast.error(error.message);
@@ -39,10 +39,10 @@ export const ChatProvider = ({ children }) => {
   };
 
   // Function to send message to the Selected User
-  const sendMessage = async (messageData) => {
+  const sendMessage = async (messageData, receiverId) => {
     try {
       const { data } = await axios.post(
-        `/api/messages/send${receiverId}`,
+        `/api/messages/send/${receiverId}`,
         messageData
       );
       if (data.success) {

@@ -5,14 +5,20 @@ import { AuthContext } from '../context/authContext';
 import { ChatContext } from '../context/ChatContext';
 
 const Sidebar = () => {
-  const { users, selectedUser, setSelectedUser, unSeenMessages, getUsers } =
-    useContext(ChatContext);
+  const {
+    users,
+    selectedUser,
+    setSelectedUser,
+    unseenMessages,
+    setUnseenMessages,
+    getUsers,
+  } = useContext(ChatContext);
 
   const { logout, onlineUsers } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
-  const [input, setInput] = useState(false);
+  const [input, setInput] = useState('');
 
   const filteredUsers = input
     ? users.filter((user) =>
@@ -76,7 +82,13 @@ const Sidebar = () => {
         {filteredUsers.map((user, index) => (
           <div
             key={index}
-            onClick={() => setSelectedUser(user)}
+            onClick={() => {
+              setSelectedUser(user);
+              setUnseenMessages((prev) => ({
+                ...prev,
+                [user._id]: 0,
+              }));
+            }}
             className={`relative flex cursor-pointer items-center gap-2 rounded p-2 pl-4 transition-colors max-sm:text-sm ${
               selectedUser?._id === user._id
                 ? 'bg-slate-700'
@@ -99,9 +111,9 @@ const Sidebar = () => {
               )}
             </div>
 
-            {(unSeenMessages?.[user._id] ?? 0) > 0 && (
+            {unseenMessages?.[user._id] > 0 && (
               <p className="absolute top-4 right-4 flex h-5 w-5 items-center justify-center rounded-full bg-purple-500 text-xs text-white">
-                {unSeenMessages[user._id]}
+                {unseenMessages[user._id]}
               </p>
             )}
           </div>
