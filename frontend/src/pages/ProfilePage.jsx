@@ -42,7 +42,7 @@ const ProfilePage = () => {
             Profile Details
           </h3>
 
-          {/* ----Upload Input---- */}
+          {/* ----Upload Profile Image---- */}
           <label
             htmlFor="avatar"
             className="flex cursor-pointer items-center gap-3 text-slate-300 transition-colors duration-200 hover:text-indigo-400"

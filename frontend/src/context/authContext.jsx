@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
         connectSocket(data.user);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -69,7 +69,7 @@ export const AuthProvider = ({ children }) => {
         toast.success('Profile updated Successfully');
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -93,8 +93,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common['token'] = token;
+      checkAuth();
     }
-    checkAuth();
   }, []);
 
   const value = {
