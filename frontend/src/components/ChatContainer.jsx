@@ -17,7 +17,10 @@ const ChatContainer = () => {
   // Handle sending a message
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (input.trim() === '') return null;
+    if (input.trim() === '') {
+      toast.error('Text or Image required');
+      return;
+    }
     await sendMessage({ text: input.trim() }, selectedUser._id);
     setInput('');
   };

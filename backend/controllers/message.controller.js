@@ -89,6 +89,8 @@ export const sendMessage = async (req, res) => {
     const receiverId = req.params.id;
     const senderId = req.user._id;
 
+    console.log("Message body:", req.body);
+
     if (!text && !image) {
       return res
         .status(400)
