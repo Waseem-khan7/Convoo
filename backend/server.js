@@ -7,15 +7,30 @@ import userRouter from "./routes/user.routes.js";
 import messageRouter from "./routes/message.routes.js";
 import { Server } from "socket.io";
 
-// Create Express App and HTTP Server
 const app = express();
 const server = http.createServer(app);
 
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+
+// CORS
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+  })
+);
+
 // Initilize Socket.io Server
-export const io = new Server(server, { cors: { origin: "*" } });
+export const io = new Server(server, {
+  cors: {
+    origin: FRONTEND_URL, // restrict to your frontend URL
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 
 // Store online users
-export const userScoketMap = {}; // {userId: socketId}
+export const userSocketMap = {}; // {userId: socketId}
 
 // Socket.io connection handler
 io.on("connection", (socket) => {
@@ -24,21 +39,20 @@ io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId;
   console.log("User Connected with ID:", userId);
 
-  if (userId) userScoketMap[userId] = socket.id;
+  if (userId) userSocketMap[userId] = socket.id;
 
   // Emit online user to all connected clients
-  io.emit("getOnlineUsers", Object.keys(userScoketMap));
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
   socket.on("disconnect", () => {
     console.log("Socket Disconnected:", userId);
-    delete userScoketMap[userId];
-    io.emit("getOnlineUsers", Object.keys(userScoketMap));
+    delete userSocketMap[userId];
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
 
 // Middleware Setup
 app.use(express.json({ limit: "5mb" }));
-app.use(cors());
 
 // Routes  setup
 app.use("/api/status", (req, res) => res.send("Server is Live"));
@@ -48,13 +62,8 @@ app.use("/api/messages", messageRouter);
 // Connect to database
 await connectDB();
 
-if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
-  server.listen(PORT, () =>
-    console.log(`Server is running on: http://localhost:${PORT}`)
-  );
-}
-
-// Export server fro vercel
-export default server;
+server.listen(PORT, () =>
+  console.log(`Server is running on: http://localhost:${PORT}`)
+);
