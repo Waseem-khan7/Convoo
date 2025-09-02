@@ -10,8 +10,10 @@ import { Server } from "socket.io";
 const app = express();
 const server = http.createServer(app);
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
-
+const FRONTEND_URL = [
+  process.env.FRONTEND_URL || "http://localhost:5173", // production from env or fallback
+  "http://localhost:5173", // local dev
+];
 // CORS
 app.use(
   cors({
