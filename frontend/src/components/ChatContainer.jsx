@@ -128,7 +128,7 @@ const ChatContainer = () => {
                       : selectedUser?.profilePic || assets.avatar_icon
                   }
                   alt="Avatar"
-                  className="w-7 rounded-full"
+                  className="h-7 w-7 rounded-full"
                 />
                 <p className="text-slate-400">
                   {formatMessageTime(msg.createdAt)}
@@ -147,7 +147,7 @@ const ChatContainer = () => {
             <img
               src={selectedUser?.profilePic || assets.avatar_icon}
               alt="typing user"
-              className="w-7 rounded-full"
+              className="h-7 w-7 rounded-full"
             />
             <div className="rounded-lg bg-slate-700/70 px-3 py-1 text-xs text-slate-200">
               Typing...
