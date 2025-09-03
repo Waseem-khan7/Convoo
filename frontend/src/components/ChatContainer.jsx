@@ -139,14 +139,6 @@ const ChatContainer = () => {
       <div className="absolute right-0 bottom-0 left-0 flex items-center gap-3 p-3">
         <div className="flex flex-1 items-center rounded-full border border-slate-600 bg-slate-800 px-3">
           <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => (e.key === 'Enter' ? handleSendMessage(e) : null)}
-            type="text"
-            placeholder="Send a message"
-            className="flex-1 rounded-lg border-none bg-transparent p-3 text-sm text-slate-100 placeholder-slate-400 outline-none"
-          />
-          <input
             onChange={handleSendImage}
             type="file"
             id="image"
@@ -160,6 +152,15 @@ const ChatContainer = () => {
               className="mr-2 w-5 cursor-pointer opacity-80 hover:opacity-100"
             />
           </label>
+
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => (e.key === 'Enter' ? handleSendMessage(e) : null)}
+            type="text"
+            placeholder="Messsage"
+            className="w-full flex-1 rounded-lg border-none bg-transparent p-2 text-sm text-slate-100 placeholder-slate-400 outline-none sm:w-3/4 sm:text-base md:w-2/3 md:text-lg lg:w-1/2 xl:w-2/5"
+          />
         </div>
         <img
           onClick={handleSendMessage}
