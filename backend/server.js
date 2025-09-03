@@ -25,7 +25,7 @@ app.use(
 // Initilize Socket.io Server
 export const io = new Server(server, {
   cors: {
-    origin: FRONTEND_URL, // restrict to your frontend URL
+    origin: FRONTEND_URL, 
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -39,9 +39,29 @@ io.on("connection", (socket) => {
   console.log("New socket connected:", socket.id);
 
   const userId = socket.handshake.query.userId;
-  console.log("User Connected with ID:", userId);
 
-  if (userId) userSocketMap[userId] = socket.id;
+  if (!userId) {
+    console.log("Socket rejected: no userId");
+    return socket.disconnect();
+  }
+
+  console.log("User Connected with ID:", userId);
+  userSocketMap[userId] = socket.id;
+
+  // Typing Events
+  socket.on("typing", ({ receiverId }) => {
+    const receiverSocketId = userSocketMap[receiverId];
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("typing", userId);
+    }
+  });
+
+  socket.on("stopTyping", ({ receiverId }) => {
+    const receiverSocketId = userSocketMap[receiverId];
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("stopTyping", userId);
+    }
+  });
 
   // Emit online user to all connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));

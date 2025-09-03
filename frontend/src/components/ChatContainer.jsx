@@ -6,8 +6,16 @@ import { AuthContext } from '../context/authContext';
 import toast from 'react-hot-toast';
 
 const ChatContainer = () => {
-  const { messages, selectedUser, setSelectedUser, getMessages, sendMessage } =
-    useContext(ChatContext);
+  const {
+    messages,
+    selectedUser,
+    setSelectedUser,
+    getMessages,
+    sendMessage,
+    handleTyping,
+    isTyping,
+    typingUser,
+  } = useContext(ChatContext);
   const { authUser, onlineUsers } = useContext(AuthContext);
 
   const [input, setInput] = useState('');
@@ -71,6 +79,7 @@ const ChatContainer = () => {
             <span className="h-2 w-2 rounded-full bg-red-500"></span>
           )}
         </div>
+
         <img
           onClick={() => setSelectedUser(null)}
           src={assets.arrow_icon}
@@ -132,6 +141,19 @@ const ChatContainer = () => {
             No messages yet. Start the conversation!
           </p>
         )}
+        {/* --------Typing Indicator-------- */}
+        {isTyping && typingUser && (
+          <div className="mb-2 flex items-center gap-2">
+            <img
+              src={selectedUser?.profilePic || assets.avatar_icon}
+              alt="typing user"
+              className="w-7 rounded-full"
+            />
+            <div className="rounded-lg bg-slate-700/70 px-3 py-1 text-xs text-slate-200">
+              Typing...
+            </div>
+          </div>
+        )}
         <div ref={scrollEnd}></div>
       </div>
 
@@ -155,7 +177,10 @@ const ChatContainer = () => {
 
           <input
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              handleTyping(selectedUser._id);
+            }}
             onKeyDown={(e) => (e.key === 'Enter' ? handleSendMessage(e) : null)}
             type="text"
             placeholder="Messsage"

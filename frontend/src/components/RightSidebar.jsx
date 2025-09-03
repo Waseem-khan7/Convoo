@@ -61,7 +61,7 @@ const RightSidebar = () => {
         {/* --------Logout Button-------- */}
         <button
           onClick={() => logout()}
-          className="mx-2 my-4 cursor-pointer rounded-full border-none bg-gradient-to-r from-violet-500 to-purple-600 px-6 py-2 text-xs font-medium text-white shadow-lg transition hover:scale-105 hover:opacity-90 sm:px-8 sm:py-2.5 sm:text-sm md:px-12 md:py-3 md:text-base lg:px-16 lg:text-lg"
+          className="mx-2 my-4 cursor-pointer rounded-full border-none bg-gradient-to-r from-violet-500 to-purple-600 px-6 py-1 text-xs font-medium text-white shadow-lg transition hover:scale-105 hover:opacity-90 sm:px-8 sm:py-1.5 sm:text-sm md:px-12 md:py-2 md:text-base lg:px-16 lg:text-lg"
         >
           Logout
         </button>
