@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import assets from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
@@ -17,6 +17,7 @@ const Sidebar = () => {
   const { logout, onlineUsers } = useContext(AuthContext);
 
   const navigate = useNavigate();
+  const menuRef = useRef(null);
 
   const [input, setInput] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -30,6 +31,20 @@ const Sidebar = () => {
   useEffect(() => {
     getUsers();
   }, [onlineUsers]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuOpen]);
 
   return (
     <div
@@ -49,13 +64,16 @@ const Sidebar = () => {
               className="max-h-5 cursor-pointer"
             />
             {menuOpen && (
-              <div className="absolute top-full right-0 z-20 w-32 rounded-md border border-slate-700 bg-slate-800 p-5 text-slate-100 shadow-lg">
+              <div
+                ref={menuRef}
+                className="absolute top-full right-0 z-20 w-32 rounded-md border border-slate-700 bg-slate-800 p-5 text-slate-100 shadow-lg"
+              >
                 <p
                   onClick={() => {
                     navigate('/profile');
                     setMenuOpen(false);
                   }}
-                  className="cursor-pointer text-sm hover:text-rose-500"
+                  className="cursor-pointer text-sm hover:text-indigo-500"
                 >
                   Edit Profile
                 </p>
@@ -68,6 +86,10 @@ const Sidebar = () => {
                   className="cursor-pointer text-sm hover:text-rose-500"
                 >
                   Logout
+                </p>
+                <hr className="my-2 border-t border-slate-600" />
+                <p className="cursor-pointer text-sm hover:text-indigo-400">
+                  Settings
                 </p>
               </div>
             )}

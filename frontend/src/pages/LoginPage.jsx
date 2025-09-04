@@ -94,14 +94,16 @@ const LoginPage = () => {
           ></textarea>
         )}
 
-        <div className="flex items-center gap-2 text-sm text-slate-400">
-          <input
-            type="checkbox"
-            className="cursor-pointer accent-indigo-500"
-            required
-          />
-          <p>Agree to the terms of use & privacy policy.</p>
-        </div>
+        {currState === 'Sign up' && !isDataSubmitted && (
+          <div className="flex items-center gap-2 text-sm text-slate-400">
+            <input
+              type="checkbox"
+              className="cursor-pointer accent-indigo-500"
+              required
+            />
+            <p>Agree to the terms of use & privacy policy.</p>
+          </div>
+        )}
 
         <button
           type="submit"
@@ -126,7 +128,7 @@ const LoginPage = () => {
             </p>
           ) : (
             <p className="text-sm text-slate-400">
-              Create an account-
+              Don't have an account?
               <span
                 onClick={() => {
                   setCurrState('Sign up');
