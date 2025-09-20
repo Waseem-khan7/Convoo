@@ -3,7 +3,7 @@ import assets from '../assets/assets';
 import { AuthContext } from '../context/authContext';
 
 const LoginPage = () => {
-  const { login } = useContext(AuthContext);
+  const { login, loginWithGoogleHandler } = useContext(AuthContext);
 
   const [currState, setCurrState] = useState('Sign up');
   const [fullName, setFullName] = useState('');
@@ -83,17 +83,6 @@ const LoginPage = () => {
           </>
         )}
 
-        {currState === 'Sign up' && isDataSubmitted && (
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            rows="4"
-            placeholder="Provide a short bio..."
-            required
-            className="rounded-md border border-slate-600 bg-transparent p-2 text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
-          ></textarea>
-        )}
-
         {currState === 'Sign up' && !isDataSubmitted && (
           <div className="flex items-center gap-2 text-sm text-slate-400">
             <input
@@ -105,11 +94,32 @@ const LoginPage = () => {
           </div>
         )}
 
+        {currState === 'Sign up' && isDataSubmitted && (
+          <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            rows="4"
+            placeholder="Provide a short bio..."
+            required
+            className="rounded-md border border-slate-600 bg-transparent p-2 text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+          ></textarea>
+        )}
+
         <button
           type="submit"
           className="cursor-pointer rounded-md bg-indigo-600/80 py-3 font-medium text-white shadow-md transition-transform duration-200 hover:scale-105 hover:bg-indigo-700"
         >
           {currState === 'Sign up' ? 'Create Account' : 'Login'}
+        </button>
+
+        {/* --------Google Login Button-------- */}
+        <button
+          type="button"
+          onClick={loginWithGoogleHandler}
+          className="flex items-center justify-center gap-2 rounded-md border border-slate-600 bg-white py-3 font-medium text-slate-700 shadow-md transition-transform duration-200 hover:scale-105 hover:bg-gray-100"
+        >
+          <img src={assets.google_icon} alt="Google" className="h-8 w-8" />
+          Continue with Google
         </button>
 
         <div className="flex flex-col gap-2">

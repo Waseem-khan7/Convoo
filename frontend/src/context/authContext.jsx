@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { io } from 'socket.io-client';
+import { loginWithGoogle } from '../lib/firebaseAuth';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.baseURL = backendUrl;
@@ -27,6 +28,23 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       toast.error(error.response.data.message);
+    }
+  };
+
+  // Google Login
+  const loginWithGoogleHandler = async () => {
+    try {
+      const data = await loginWithGoogle();
+      if (data) {
+        setAuthUser(data.user);
+        axios.defaults.headers.common['token'] = data.token;
+        setToken(data.token);
+        localStorage.setItem('token', data.token);
+        toast.success('Logged in with Google');
+      }
+    } catch (error) {
+      console.error('Google login failed:', error);
+      toast.error(error.response?.data?.message || error.message);
     }
   };
 
@@ -105,6 +123,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     updateProfile,
+    loginWithGoogleHandler,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

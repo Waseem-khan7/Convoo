@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema(
     password: { type: String, required: true, minlength: 6 },
     profilePic: { type: String, default: "" },
     bio: { type: String },
+    googleId: { type: String, unique: true, sparse: true },
   },
   { timestamps: true }
 );

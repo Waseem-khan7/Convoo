@@ -6,6 +6,7 @@ import { connectDB } from "./lib/dbConnection.js";
 import userRouter from "./routes/user.routes.js";
 import messageRouter from "./routes/message.routes.js";
 import { Server } from "socket.io";
+import authRouter from "./routes/auth.routes.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -25,7 +26,7 @@ app.use(
 // Initilize Socket.io Server
 export const io = new Server(server, {
   cors: {
-    origin: FRONTEND_URL, 
+    origin: FRONTEND_URL,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -79,6 +80,7 @@ app.use(express.json({ limit: "5mb" }));
 // Routes  setup
 app.use("/api/status", (req, res) => res.send("Server is Live"));
 app.use("/api/auth", userRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/messages", messageRouter);
 
 // Connect to database
